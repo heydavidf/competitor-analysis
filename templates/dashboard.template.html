@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Competitive Analysis Dashboard</title>
+<style>
+:root{color-scheme:light dark;--bg:#f4f1ea;--surface:#fffdf8;--ink:#18211d;--muted:#617068;--line:#d8d5cc;--accent:#176b52;--accent-soft:#dcece5;--radius:14px;font-family:"Trebuchet MS","Avenir Next",sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink)}button,select,input{font:inherit}a{color:var(--accent)}main{width:min(1180px,calc(100% - 32px));margin:0 auto;padding:32px 0 56px}.eyebrow{color:var(--accent);font-size:.78rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase}.hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,.7fr);gap:24px;align-items:start;margin-bottom:28px}h1{font-size:clamp(2rem,5vw,4.5rem);line-height:.95;letter-spacing:-.05em;margin:.35rem 0 1rem;max-width:850px}h2{font-size:1.3rem;margin:0 0 14px}h3{font-size:1rem;margin:0 0 8px}.lede{font-size:1.05rem;line-height:1.6;max-width:760px;color:var(--muted)}.meta{font-size:.84rem;color:var(--muted);line-height:1.6}.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px}.verdict{background:var(--accent-soft)}.verdict strong{display:block;font-size:2rem;letter-spacing:-.03em;margin:.25rem 0}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:18px 0 28px}.signal{min-height:165px}.signal p,.competitor p{color:var(--muted);line-height:1.5;margin:.4rem 0}.section{margin-top:34px}.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin:14px}.field{display:grid;gap:5px}.field label{font-size:.78rem;color:var(--muted)}select,input{min-height:40px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);padding:8px 10px}.competitors{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.competitor{position:relative}.badge{display:inline-block;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:.72rem;font-weight:700;padding:4px 8px;margin-right:5px}.rank{position:absolute;right:18px;top:16px;font-size:.78rem;color:var(--muted)}.grade{font-size:1.65rem;font-weight:700;color:var(--accent)}dl{display:grid;grid-template-columns:130px 1fr;gap:8px 12px;margin:14px 0 0;font-size:.9rem}dt{color:var(--muted)}dd{margin:0}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}table{width:100%;border-collapse:collapse;min-width:900px;font-size:.84rem}th,td{text-align:left;vertical-align:top;padding:11px 12px;border-bottom:1px solid var(--line);line-height:1.45}th{position:sticky;top:0;background:var(--surface);color:var(--muted);font-size:.74rem;text-transform:uppercase;letter-spacing:.04em}tr:last-child td{border-bottom:0}.sources{columns:2;column-gap:30px}.sources li{break-inside:avoid;margin:0 0 10px;line-height:1.45}.empty{color:var(--muted);font-style:italic}.footer{margin-top:32px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.8rem}
+@media(prefers-color-scheme:dark){:root{--bg:#121815;--surface:#19211d;--ink:#eef5f0;--muted:#a6b4ac;--line:#354039;--accent:#75d3ae;--accent-soft:#213c32}}
+@media(max-width:800px){main{width:min(100% - 20px,1180px);padding-top:20px}.hero,.grid,.competitors{grid-template-columns:1fr}.grid{gap:10px}.sources{columns:1}dl{grid-template-columns:100px 1fr}}
+</style>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <div>
+      <div class="eyebrow">Competitive analysis</div>
+      <h1 id="title"></h1>
+      <p class="lede" id="context"></p>
+      <p class="meta" id="meta"></p>
+    </div>
+    <aside class="panel verdict" aria-labelledby="verdict-label">
+      <div class="eyebrow" id="verdict-label">Marketplace verdict</div>
+      <strong id="verdict"></strong>
+      <p id="verdict-rationale"></p>
+    </aside>
+  </header>
+
+  <section class="grid" aria-label="Decision summary">
+    <article class="panel signal"><div class="eyebrow">Biggest threat</div><h2 id="top-threat"></h2><p id="top-threat-why"></p></article>
+    <article class="panel signal"><div class="eyebrow">Opportunity gap</div><h2 id="gap"></h2><p id="gap-why"></p></article>
+    <article class="panel signal"><div class="eyebrow">Recommendation</div><h2 id="recommendation"></h2><p id="next-test"></p></article>
+  </section>
+
+  <section class="section" aria-labelledby="competitor-heading">
+    <div class="eyebrow">Landscape</div><h2 id="competitor-heading">Competitors</h2>
+    <div class="toolbar">
+      <div class="field"><label for="type-filter">Type</label><select id="type-filter"><option value="all">All types</option></select></div>
+      <div class="field"><label for="group-filter">Subgroup</label><select id="group-filter"><option value="all">All subgroups</option></select></div>
+      <div class="field"><label for="search-filter">Search</label><input id="search-filter" type="search" placeholder="Competitor or evidence"></div>
+    </div>
+    <div class="competitors" id="competitors"></div>
+  </section>
+
+  <section class="section" aria-labelledby="matrix-heading">
+    <div class="eyebrow">Canonical evidence</div><h2 id="matrix-heading">Research matrix</h2>
+    <div class="table-wrap"><table><thead id="matrix-head"></thead><tbody id="matrix-body"></tbody></table></div>
+  </section>
+
+  <section class="section" aria-labelledby="sources-heading">
+    <div class="eyebrow">Traceability</div><h2 id="sources-heading">Sources</h2>
+    <ol class="sources" id="sources"></ol>
+  </section>
+
+  <footer class="footer" id="footer"></footer>
+</main>
+<script>
+const data = __DASHBOARD_DATA__;
+const text = (id,value) => { document.getElementById(id).textContent = value || "Not available"; };
+const safeLink = value => { try { const local = typeof value === "string" && value.startsWith("./") && !value.includes("..") && !value.includes("\\") && !value.includes("%") && !value.includes("?") && !value.includes("#"); const u = new URL(value, document.baseURI); return (["http:","https:"].includes(u.protocol) || (local && u.protocol === "file:")) ? u.href : null; } catch { return null; } };
+const escapeHtml = value => { const span=document.createElement("span"); span.textContent=value ?? ""; return span.innerHTML; };
+
+text("title", data.title);
+text("context", [data.targetCustomer, data.problem, data.valueProposition].filter(Boolean).join(" · "));
+text("meta", [data.mode && `${data.mode} mode`, data.geography, data.date, data.criticalTask && `Critical task: ${data.criticalTask}`].filter(Boolean).join(" · "));
+text("verdict", data.verdict);
+text("verdict-rationale", data.verdictRationale);
+text("top-threat", data.topThreat?.name);
+text("top-threat-why", data.topThreat?.why);
+text("gap", data.opportunity?.label);
+text("gap-why", data.opportunity?.evidence);
+text("recommendation", data.recommendation?.summary);
+text("next-test", data.recommendation?.nextTest ? `Next test: ${data.recommendation.nextTest}` : "");
+text("footer", `Snapshot generated ${data.date || "date unavailable"}. Canonical evidence: research-matrix.csv. Canonical argument: competitive-analysis-brief.md.`);
+
+const competitors = Array.isArray(data.competitors) ? data.competitors : [];
+const typeFilter = document.getElementById("type-filter");
+const groupFilter = document.getElementById("group-filter");
+const searchFilter = document.getElementById("search-filter");
+const unique = key => [...new Set(competitors.map(item => item[key]).filter(Boolean))].sort();
+const addOptions = (select, values) => values.forEach(value => { const option=document.createElement("option"); option.value=value; option.textContent=value; select.appendChild(option); });
+addOptions(typeFilter, unique("type")); addOptions(groupFilter, unique("subgroup"));
+
+function renderCompetitors(){
+  const root=document.getElementById("competitors"); root.replaceChildren();
+  const query=searchFilter.value.trim().toLowerCase();
+  const visible=competitors.filter(item => (typeFilter.value==="all" || item.type===typeFilter.value) && (groupFilter.value==="all" || item.subgroup===groupFilter.value) && (!query || JSON.stringify(item).toLowerCase().includes(query)));
+  visible.forEach(item => {
+    const article=document.createElement("article"); article.className="panel competitor";
+    const badges=[item.type,item.subgroup].filter(Boolean).map(value => `<span class="badge">${escapeHtml(value)}</span>`).join("");
+    article.innerHTML=`${item.rank ? `<span class="rank">Threat #${escapeHtml(String(item.rank))}</span>` : ""}<div>${badges}</div><h2>${escapeHtml(item.name || "Unnamed competitor")}</h2><p>${escapeHtml(item.whyCompetes || "")}</p><dl><dt>Value</dt><dd>${escapeHtml(item.valueProposition || "Not found")}</dd><dt>Task grade</dt><dd class="grade">${escapeHtml(item.uxGrade || "N/O")}</dd><dt>Strength</dt><dd>${escapeHtml(item.strength || "Not found")}</dd><dt>Friction</dt><dd>${escapeHtml(item.friction || "Not found")}</dd><dt>Confidence</dt><dd>${escapeHtml(item.confidence || "Not stated")}</dd></dl>`;
+    root.appendChild(article);
+  });
+  if(!visible.length){ const p=document.createElement("p"); p.className="empty"; p.textContent="No competitors match these filters."; root.appendChild(p); }
+}
+[typeFilter,groupFilter,searchFilter].forEach(control => control.addEventListener("input",renderCompetitors));
+
+const columns=Array.isArray(data.matrixColumns) && data.matrixColumns.length ? data.matrixColumns : ["name","type","subgroup","whyCompetes","valueProposition","uxGrade","strength","friction","confidence"];
+const headRow=document.createElement("tr");
+columns.forEach(column => { const th=document.createElement("th"); th.scope="col"; th.textContent=column.replace(/([A-Z])/g," $1").replace(/^./,c=>c.toUpperCase()); headRow.appendChild(th); });
+document.getElementById("matrix-head").appendChild(headRow);
+competitors.forEach(item => { const row=document.createElement("tr"); columns.forEach(column => { const td=document.createElement("td"); const value=item[column]; td.textContent=Array.isArray(value) ? value.join("; ") : (value ?? "Not found"); row.appendChild(td); }); document.getElementById("matrix-body").appendChild(row); });
+
+const sourceRoot=document.getElementById("sources");
+(Array.isArray(data.sources) ? data.sources : []).forEach(source => { const li=document.createElement("li"); const href=safeLink(source.url); if(href){ const a=document.createElement("a"); a.href=href; a.target="_blank"; a.rel="noopener noreferrer"; a.textContent=source.name || href; li.appendChild(a); } else { li.textContent=source.name || "Source unavailable"; } if(source.accessed){ li.append(`, accessed ${source.accessed}`); } sourceRoot.appendChild(li); });
+if(!sourceRoot.children.length){ const li=document.createElement("li"); li.className="empty"; li.textContent="No sources supplied."; sourceRoot.appendChild(li); }
+renderCompetitors();
+</script>
+</body>
+</html>

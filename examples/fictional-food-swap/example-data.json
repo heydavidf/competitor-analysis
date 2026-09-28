@@ -1,0 +1,76 @@
+{
+  "title": "GatherSlot: Saturday pickup shifts (fictional simulation)",
+  "targetCustomer": "Mira, a fictional neighborhood food-swap volunteer coordinator",
+  "problem": "Fill three Saturday pickup shifts without double-booking a volunteer",
+  "valueProposition": "GatherSlot proposes one-screen assignment with an availability check",
+  "criticalTask": "Assign three pickup shifts and identify overlapping assignments before publishing",
+  "mode": "rapid",
+  "geography": "Fictional English-language neighborhood food swaps",
+  "date": "2026-09-24",
+  "verdict": "Purple",
+  "verdictRationale": "In these invented notes, two direct options handle signup and one checks overlaps, while the quicker options leave conflict checking to the coordinator. This is only a simulation.",
+  "topThreat": {"name": "RosterCove", "why": "Its simulated conflict warning meets the most important task requirement; setup friction remains."},
+  "opportunity": {"label": "Fast conflict-safe assignment", "evidence": "The invented RosterCove flow checks overlaps but takes several setup screens; the invented faster flows do not check them."},
+  "recommendation": {"summary": "Prototype a single-screen conflict check", "nextTest": "Ask five real coordinators to assign three shifts in a prototype and observe errors and setup time before making a product decision."},
+  "matrixColumns": ["name", "type", "subgroup", "whyCompetes", "valueProposition", "businessModel", "taskEntry", "taskSteps", "taskOutcome", "uxGrade", "strength", "friction", "advantages", "replicability", "customerEvidence", "swotStrengths", "swotWeaknesses", "swotOpportunities", "swotThreats", "sources", "accessed", "evidenceType", "confidence"],
+  "competitors": [
+    {
+      "name": "ShiftBerry", "type": "Direct", "subgroup": "Volunteer scheduler", "rank": 2,
+      "whyCompetes": "Offers pickup-slot signup to the same fictional coordinator.",
+      "valueProposition": "Share a volunteer signup link quickly.", "businessModel": "Fictional free basic tier; paid reminders.",
+      "taskEntry": "Coordinator creates three slots.", "taskSteps": "Create slots; send link; volunteers select slots; review roster.",
+      "taskOutcome": "Slots can be filled, but overlaps are not flagged.", "uxGrade": "B",
+      "strength": "Invented flow makes signup links easy to share.", "friction": "Coordinator must check overlapping shifts separately.",
+      "advantages": "Fast link sharing; low initial cost.", "replicability": "Both appear easy to replicate in this simulation.",
+      "customerEvidence": "Two invented positive comments about link sharing; one invented conflict complaint. These are not real reviews.",
+      "swotStrengths": "Simple signup flow.", "swotWeaknesses": "No simulated overlap warning.",
+      "swotOpportunities": "Could add conflict detection.", "swotThreats": "A faster conflict-safe option could displace it.",
+      "sources": "Synthetic ShiftBerry note (./fixtures/shiftberry.md)", "accessed": "2026-09-24", "evidenceType": "Observed in synthetic fixture; reported comments are invented", "confidence": "Low"
+    },
+    {
+      "name": "RosterCove", "type": "Direct", "subgroup": "Volunteer scheduler", "rank": 1,
+      "whyCompetes": "Offers scheduling and overlap checks to the same fictional coordinator.",
+      "valueProposition": "Plan recurring volunteer shifts with conflict warnings.", "businessModel": "Fictional monthly group subscription.",
+      "taskEntry": "Coordinator creates an account and recurring schedule.", "taskSteps": "Set recurrence; import availability; assign people; resolve flagged overlap; publish.",
+      "taskOutcome": "Overlapping assignments are flagged before publication.", "uxGrade": "B",
+      "strength": "Invented flow catches the target error.", "friction": "Several setup screens and an account for a small event.",
+      "advantages": "Conflict warning; recurring schedule support.", "replicability": "Conflict logic appears replicable; recurring workflow takes more work.",
+      "customerEvidence": "Two invented positive comments about warnings; one invented setup complaint. These are not real reviews.",
+      "swotStrengths": "Checks overlaps.", "swotWeaknesses": "Higher setup effort.",
+      "swotOpportunities": "Could simplify one-off scheduling.", "swotThreats": "A lighter tool with the same warning could displace it.",
+      "sources": "Synthetic RosterCove note (./fixtures/rostercove.md)", "accessed": "2026-09-24", "evidenceType": "Observed in synthetic fixture; reported comments are invented", "confidence": "Low"
+    },
+    {
+      "name": "PatchPad", "type": "Indirect", "subgroup": "Shared table", "rank": 3,
+      "whyCompetes": "A generic shared table can hold the same three pickup slots.",
+      "valueProposition": "Let a small group edit a shared table.", "businessModel": "Fictional free small-table tier.",
+      "taskEntry": "Coordinator creates a three-row table.", "taskSteps": "Make rows; share edit access; volunteers add names; manually inspect conflicts.",
+      "taskOutcome": "Assignments are visible; overlap checking is manual.", "uxGrade": "C",
+      "strength": "Flexible, low-effort setup in the invented flow.", "friction": "No scheduling-specific overlap warning.",
+      "advantages": "Flexible table; low price.", "replicability": "Generic table is easy to imitate but its familiarity may be hard to displace.",
+      "customerEvidence": "One invented positive comment only; it is an anecdote, not a pattern.",
+      "swotStrengths": "Flexible and familiar.", "swotWeaknesses": "Manual conflict check.",
+      "swotOpportunities": "Could add scheduling templates.", "swotThreats": "Purpose-built tools could reduce coordinator effort.",
+      "sources": "Synthetic PatchPad note (./fixtures/patchpad.md)", "accessed": "2026-09-24", "evidenceType": "Observed in synthetic fixture; reported comment is invented", "confidence": "Low"
+    },
+    {
+      "name": "Paper board", "type": "Indirect", "subgroup": "Manual workaround", "rank": 4,
+      "whyCompetes": "A coordinator can fill slots by asking volunteers on site.",
+      "valueProposition": "List available shifts without a device or account.", "businessModel": "No software charge; coordinator time is required.",
+      "taskEntry": "Coordinator posts a board at the swap.", "taskSteps": "Write slots; collect names; remember or manually verify conflicts.",
+      "taskOutcome": "On-site names are recorded; remote volunteers cannot see current assignments.", "uxGrade": "D",
+      "strength": "No account or device needed.", "friction": "Remote visibility and conflict checking are weak.",
+      "advantages": "Zero software cost; visible on site.", "replicability": "Trivial to copy; no durable technical advantage.",
+      "customerEvidence": "One invented missed-shift comment only; it is an anecdote, not a pattern.",
+      "swotStrengths": "Accessible to on-site volunteers.", "swotWeaknesses": "No remote access or automatic warning.",
+      "swotOpportunities": "Could combine with a phone photo or message.", "swotThreats": "Remote-friendly tools could replace it.",
+      "sources": "Synthetic paper-board note (./fixtures/paper-board.md)", "accessed": "2026-09-24", "evidenceType": "Observed in synthetic fixture; reported comment is invented", "confidence": "Low"
+    }
+  ],
+  "sources": [
+    {"name": "Synthetic ShiftBerry note", "url": "./fixtures/shiftberry.md", "accessed": "2026-09-24"},
+    {"name": "Synthetic RosterCove note", "url": "./fixtures/rostercove.md", "accessed": "2026-09-24"},
+    {"name": "Synthetic PatchPad note", "url": "./fixtures/patchpad.md", "accessed": "2026-09-24"},
+    {"name": "Synthetic paper-board note", "url": "./fixtures/paper-board.md", "accessed": "2026-09-24"}
+  ]
+}
