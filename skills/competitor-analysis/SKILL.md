@@ -2,7 +2,7 @@
 name: competitor-analysis
 description: Compare the alternatives a customer could use for one important task, and judge whether a proposed value has room to compete. Use when mapping direct and indirect alternatives, benchmarking a critical customer task, or pressure-testing a value proposition.
 license: MIT
-compatibility: Requires an agent that can browse the web for live studies and write local files. The included fictional example can be inspected offline.
+compatibility: Requires an agent that can browse the web for live studies and write local files. The fictional example in the repository can be inspected offline.
 ---
 
 # Competitor Analysis
@@ -11,7 +11,7 @@ Run a customer- and UX-focused competitive analysis. Preserve useful business ev
 
 Read [references/method.md](references/method.md) before research. Use [templates/dashboard.template.html](templates/dashboard.template.html) to render the final dashboard.
 
-This procedure is original. It overlaps with the outlook in Jaime Levy's *UX Strategy*: start from a specific customer and one important task, include indirect alternatives, and take a position on the proposed value. These instructions are written for an agent. They are not a summary of the book, and no book text is included. See [README.md](README.md) for installation and a wholly fictional example.
+This procedure is original. It overlaps with the outlook in Jaime Levy's *UX Strategy*: start from a specific customer and one important task, include indirect alternatives, and take a position on the proposed value. These instructions are written for an agent. They are not a summary of the book, and no book text is included. See the [repository README](https://github.com/heydavidf/competitor-analysis#readme) for installation and a wholly fictional example.
 
 ## 1. Frame the Decision
 

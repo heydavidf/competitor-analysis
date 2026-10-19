@@ -1,0 +1,91 @@
+# Checks for this skill repository. AGENTS.md lists the same commands.
+# Runs on every push to main, on pull requests and weekly. The weekly run also checks external links.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.14"
+
+      - name: Lint and format (ruff)
+        run: |
+          pipx run --spec ruff==0.17.1 ruff check --no-cache .
+          pipx run --spec ruff==0.17.1 ruff format --no-cache --check .
+
+      - name: Tests
+        run: python -B -m unittest discover -s tests -v
+
+      - name: Skill layout (skills/<name>/, name matches folder, licence copy, links stay inside)
+        run: python -B .github/check_skill_layout.py
+
+      # publish --dry-run applies the same discovery rules as a remote install and fails when SKILL.md sits at the
+      # repository root; install --from-local alone accepts that. The exported copy has no remote, so no API calls.
+      - name: Discoverable and installable with gh skill
+        run: |
+          gh --version
+          mkdir "$RUNNER_TEMP/tree"
+          git archive HEAD | tar -x -C "$RUNNER_TEMP/tree"
+          gh skill publish --dry-run "$RUNNER_TEMP/tree"
+          gh skill install --from-local . competitor-analysis --dir "$RUNNER_TEMP/gh-skill"
+          test -f "$RUNNER_TEMP/gh-skill/competitor-analysis/SKILL.md"
+          test -f "$RUNNER_TEMP/gh-skill/competitor-analysis/references/method.md"
+          test -f "$RUNNER_TEMP/gh-skill/competitor-analysis/templates/dashboard.template.html"
+          test -f "$RUNNER_TEMP/gh-skill/competitor-analysis/LICENSE"
+
+      - name: Example rebuilds unchanged
+        run: |
+          python -B examples/fictional-food-swap/build_example.py
+          git diff --exit-code -- examples/
+
+      - name: Agent Skills spec (skills-ref, pinned)
+        run: |
+          python -m venv "$RUNNER_TEMP/skills-ref"
+          "$RUNNER_TEMP/skills-ref/bin/pip" install --quiet 'skills-ref @ git+https://github.com/agentskills/agentskills.git@69ef37e9424c0a7ea9dd2293b559e43ec8176379#subdirectory=skills-ref'
+          for skill in skills/*/; do "$RUNNER_TEMP/skills-ref/bin/skills-ref" validate "$skill"; done
+
+      - name: Tripwire (personal paths, junk files, silenced checks)
+        env:
+          BASE_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [ -n "$BASE_REF" ] && git cat-file -e "$BASE_REF" 2>/dev/null; then
+            bash .github/tripwire.sh "$BASE_REF"
+          else
+            echo "::notice title=Tripwire::No usable base commit, so added lines were not checked for silenced checks."
+            bash .github/tripwire.sh
+          fi
+
+      - name: Secrets (gitleaks)
+        uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Links (local on every run, external weekly)
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          args: ${{ github.event_name == 'schedule' && '--no-progress .' || '--offline --no-progress .' }}
+          fail: true

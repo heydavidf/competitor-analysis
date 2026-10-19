@@ -1,0 +1,15 @@
+# Study output the skill writes when run from this folder (default: competitive-analysis-<slug>/).
+# Real studies can hold confidential research; keep them out of this public repository.
+competitive-analysis-*/
+
+# Local caches and system files
+__pycache__/
+*.pyc
+.ruff_cache/
+.venv/
+venv/
+.DS_Store
+*.db
+*.db-shm
+*.db-wal
+*.db-journal
