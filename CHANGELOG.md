@@ -2,7 +2,7 @@
 
 All notable changes to this skill are listed here. Versions follow [semantic versioning](https://semver.org/).
 
-## 1.0.0 - 2026-10-19
+## 1.0.0 - 2026-10-20
 
 First tagged version. The skill's method and outputs are unchanged.
 
